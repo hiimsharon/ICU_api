@@ -72,3 +72,11 @@ app.get("/", (req, res) => {
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+
+// ✅ 測試用：顯示環境變數是否成功讀取
+app.get("/api/env-test", (req, res) => {
+  res.json({
+    uri: process.env.MONGODB_URI ? "✅ 成功取得 MONGODB_URI" : "❌ 無法取得",
+    preview: process.env.MONGODB_URI?.slice(0, 30) + "..."
+  });
+});
