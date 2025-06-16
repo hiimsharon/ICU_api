@@ -18,7 +18,7 @@ mongoose.connect(process.env.MONGODB_URI)
 const userSchema = new mongoose.Schema({
   username: String,
   name: String,
-  password_hash: String
+  password: String // 修改對應欄位名稱為 password
 });
 const User = mongoose.model('User', userSchema);
 
@@ -32,7 +32,7 @@ app.post("/api/login", async (req, res) => {
       return res.status(401).json({ success: false, message: "帳號錯誤" });
     }
 
-    const valid = await bcrypt.compare(password, user.password_hash);
+    const valid = await bcrypt.compare(password, user.password);
 
     if (!valid) {
       return res.status(401).json({ success: false, message: "密碼錯誤" });
