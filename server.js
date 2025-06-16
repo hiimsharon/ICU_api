@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt'); // ✅ 用於密碼比對
 const cors = require('cors');
 const patientsRoute = require('./routes/patients');
 const uri = process.env.MONGODB_URI;
@@ -12,19 +12,25 @@ app.use(express.json());
 
 console.log("🔍 Using MongoDB URI:", process.env.MONGODB_URI);
 
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect(uri)
   .then(() => console.log('✅ MongoDB connected'))
   .catch(err => console.error('❌ MongoDB connection error:', err));
 
+/**
+ * ✅ User 資料模型 - 密碼字段為加密後版本
+ */
 const userSchema = new mongoose.Schema({
-  username: String,
+  username: { type: String, required: true, unique: true },
   name: String,
-  password: String // 修改對應欄位名稱為 password
+  password: { type: String, required: true } // 雜湊後密碼
 });
 const User = mongoose.model('User', userSchema);
 
+/**
+ * ✅ 登入 API - 使用 bcrypt 驗證密碼
+ */
 app.post("/api/login", async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password: plainPassword } = req.body;
 
   try {
     const user = await User.findOne({ username });
@@ -33,22 +39,33 @@ app.post("/api/login", async (req, res) => {
       return res.status(401).json({ success: false, message: "帳號錯誤" });
     }
 
-    const valid = await bcrypt.compare(password, user.password);
-
+    // ✅ 使用 bcrypt 驗證使用者輸入的密碼
+    const valid = await bcrypt.compare(plainPassword, user.password);
     if (!valid) {
       return res.status(401).json({ success: false, message: "密碼錯誤" });
     }
 
-    res.json({ success: true, username: user.username, name: user.name });
+    // ✅ 登入成功，回傳基本資料
+    res.json({
+      success: true,
+      username: user.username,
+      name: user.name
+    });
 
   } catch (err) {
-    console.error("登入錯誤:", err);
+    console.error("🚨 登入錯誤:", err);
     res.status(500).json({ success: false, message: "伺服器錯誤" });
   }
 });
 
+/**
+ * 📦 病患相關 API
+ */
 app.use('/api/patients', patientsRoute);
 
+/**
+ * 🔍 根路由檢查 API
+ */
 app.get("/", (req, res) => {
   res.send("✅ ICU API server is running");
 });
