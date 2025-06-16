@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const cors = require('cors');
 const patientsRoute = require('./routes/patients');
+const uri = process.env.MONGODB_URI;
 
 const app = express();
 app.use(cors());
