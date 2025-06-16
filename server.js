@@ -22,7 +22,7 @@ mongoose.connect(process.env.MONGODB_URI)
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   name: String,
-  password: { type: String, required: true } // 雜湊後密碼
+  password_hash: { type: String, required: true } // 雜湊後密碼
 });
 const User = mongoose.model('User', userSchema);
 
@@ -40,7 +40,7 @@ app.post("/api/login", async (req, res) => {
     }
 
     // ✅ 使用 bcrypt 驗證使用者輸入的密碼
-    const valid = await bcrypt.compare(password, user.password);
+const valid = await bcrypt.compare(password, user.password_hash);
     if (!valid) {
       return res.status(401).json({ success: false, message: "密碼錯誤" });
     }
