@@ -31,7 +31,7 @@ const User = mongoose.model('User', userSchema);
  * ✅ 登入 API - 使用 bcrypt 驗證密碼
  */
 app.post("/api/login", async (req, res) => {
-  const { username, password: plainPassword } = req.body;
+  const { username, password } = req.body;
 
   try {
     const user = await User.findOne({ username });
@@ -41,7 +41,7 @@ app.post("/api/login", async (req, res) => {
     }
 
     // ✅ 使用 bcrypt 驗證使用者輸入的密碼
-    const valid = await bcrypt.compare(plainPassword, user.password);
+    const valid = await bcrypt.compare(password, user.password_hash);
     if (!valid) {
       return res.status(401).json({ success: false, message: "密碼錯誤" });
     }
