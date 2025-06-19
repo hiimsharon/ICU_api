@@ -9,8 +9,8 @@ const app = express();
 const uri = process.env.MONGODB_URI;
 
 const corsOptions = {
-  origin: 'https://icu-frontend.vercel.app',  // ✅ 改成你的前端網址
-  methods: ['GET', 'POST'],
+  origin: ['https://icu-frontend.vercel.app'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
 };
 
