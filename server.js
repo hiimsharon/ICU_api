@@ -9,12 +9,15 @@ const app = express();
 const uri = process.env.MONGODB_URI;
 
 const corsOptions = {
-  origin: ['https://icu-frontend.vercel.app'],
+  origin: '*',
+  //origin: ['https://icu-frontend.vercel.app'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
+  allowedHeaders: ['Content-Type']
 };
 
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));  // ✅ 預檢處理 ← 這是解決 Hoppscotch & 前端問題的關鍵
 app.use(express.json());
 /**
  * 📦 病患相關 API
