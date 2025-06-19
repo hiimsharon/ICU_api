@@ -57,7 +57,7 @@ app.post("/api/login", async (req, res) => {
     }
 
     // ✅ 使用 bcrypt 驗證使用者輸入的密碼
-const valid = await bcrypt.compare(password, user.password_hash);
+    const valid = await bcrypt.compare(password, user.password_hash);
     if (!valid) {
       return res.status(401).json({ success: false, message: "密碼錯誤" });
     }
@@ -71,7 +71,7 @@ const valid = await bcrypt.compare(password, user.password_hash);
 
   } catch (err) {
     console.error("🚨 登入錯誤:", err);
-    res.status(500).json({ success: false, message: "伺服器錯誤" });
+    return res.status(500).json({ success: false, message: "伺服器錯誤" });
   }
 });
 
