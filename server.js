@@ -71,7 +71,8 @@ app.post("/api/login", async (req, res) => {
     res.json({
       success: true,
       username: user.username,
-      name: user.name
+      name: user.name, 
+      role: user.role  // 新增這一行！
     });
 
   } catch (err) {
@@ -84,9 +85,10 @@ app.post("/api/login", async (req, res) => {
 app.get('/add-test-users', async (req, res) => {
   try {
     const testUsers = [
-      { username: 'D001', password: 'sharonD001', name: 'Doctor 001' },
-      { username: 'D002', password: 'sharonD002', name: 'Doctor 002' },
-      { username: 'D003', password: 'sharonD003', name: 'Doctor 003' }
+      { username: 'D001', password: 'sharonD001', name: 'Doctor 001', role:'doctor' },
+      { username: 'D002', password: 'sharonD002', name: 'Doctor 002', role:'doctor' },
+      { username: 'D003', password: 'sharonD003', name: 'Doctor 003', role:'doctor' },
+      { username: 'sharon', password: 'sharon12345', name: 'sharon', role:'admin' },
     ];
 
     const results = [];
