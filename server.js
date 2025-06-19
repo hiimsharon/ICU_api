@@ -3,13 +3,17 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt'); // ✅ 用於密碼比對
 const cors = require('cors');
+const corsOptions = {
+  origin: 'https://icu-frontend.vercel.app',  // ✅ 改成你的前端網址
+  credentials: true,
+};
 const patientsRoute = require('./routes/patients');
 const app = express();
 const uri = process.env.MONGODB_URI;
 
 
 app.use('/api/patients', patientsRoute);
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 console.log("🔍 Using MongoDB URI:", process.env.MONGODB_URI);  //列印目前連線字串前幾碼（Debug 用）
