@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt'); // ✅ 用於密碼比對
 const cors = require('cors');
-const patientsRoute = require('./routes/patients');
+
 
 const app = express();
 const uri = process.env.MONGODB_URI;
@@ -19,8 +19,13 @@ app.use(express.json());
 /**
  * 📦 病患相關 API
  */
+const patientsRoute = require('./routes/patients');
 app.use('/api/patients', patientsRoute);
 
+// 可選的首頁測試路由
+app.get("/", (req, res) => {
+  res.send("🏥 ICU API is running");
+});
 
 console.log("🔍 Using MongoDB URI:", process.env.MONGODB_URI);  //列印目前連線字串前幾碼（Debug 用）
 
