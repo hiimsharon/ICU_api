@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt'); // ✅ 用於密碼比對
 const cors = require('cors');
 const patientsRoute = require('./routes/patients');
+app.use('/api/patients', patientsRoute);
+
 const uri = process.env.MONGODB_URI;
 
 const app = express();
