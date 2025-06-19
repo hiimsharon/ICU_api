@@ -12,7 +12,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-console.log("🔍 Using MongoDB URI:", process.env.MONGODB_URI?.slice(0, 40));  //列印目前連線字串前幾碼（Debug 用）
+console.log("🔍 Using MongoDB URI:", process.env.MONGODB_URI);  //列印目前連線字串前幾碼（Debug 用）
 
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
