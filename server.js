@@ -63,6 +63,37 @@ const valid = await bcrypt.compare(password, user.password_hash);
   }
 });
 
+// ✅ 新增三個帳號
+app.get('/add-test-users', async (req, res) => {
+  try {
+    const testUsers = [
+      { username: 'D001', password: 'sharonD001', name: 'Doctor 001' },
+      { username: 'D002', password: 'sharonD002', name: 'Doctor 002' },
+      { username: 'D003', password: 'sharonD003', name: 'Doctor 003' }
+    ];
+
+    const results = [];
+
+    for (const { username, password, name } of testUsers) {
+      const exists = await User.findOne({ username });
+      if (exists) {
+        results.push(`⚠️ 使用者 ${username} 已存在`);
+        continue;
+      }
+
+      const password_hash = await bcrypt.hash(password, 10);
+      await User.create({ username, password_hash, name });
+      results.push(`✅ 建立使用者 ${username} 成功`);
+    }
+
+    res.send(results.join('<br>'));
+
+  } catch (err) {
+    console.error("🚨 建立測試帳號失敗:", err);
+    res.status(500).send("❌ 建立失敗：" + err.message);
+  }
+});
+
 /**
  * ✅ 新增測試用帳號 D004（密碼：sharonD004）
  */
