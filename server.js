@@ -166,6 +166,24 @@ app.get('/fix-sharon-role', async (req, res) => {
   }
 });
 
+// ✅ 重設 sharon 密碼為 sharon12345
+app.get('/reset-sharon-password', async (req, res) => {
+  try {
+    const user = await User.findOne({ username: 'sharon' });
+    if (!user) {
+      return res.send("❌ 找不到使用者 sharon");
+    }
+
+    user.password_hash = await bcrypt.hash('sharon12345', 10);
+    await user.save();
+
+    res.send("✅ sharon 密碼已重設為 sharon12345");
+  } catch (err) {
+    console.error("🚨 密碼重設失敗:", err);
+    res.status(500).send("❌ 密碼重設失敗：" + err.message);
+  }
+});
+
 
 /**
  * 🔍 根路由檢查 API
