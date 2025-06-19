@@ -1,34 +1,35 @@
-// routes/patients.js
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-// ✅ 定義 Patient Schema（根據 MongoDB Atlas 的資料結構）
+// ✅ 建立病患 Schema（與你資料庫結構一致）
 const patientSchema = new mongoose.Schema({
+  patient_id: Number,
   name: String,
-  patient_id: String,
   age: Number,
   gender: String,
-  bed_id: Number,
   diagnosis: String,
-  attending_doctor_id: String,
+  apache_score: Number,
   admission_date: Date,
   discharge_date: Date,
-  apache_score: Number
-});
+  attending_doctor_id: String,
+  bed_id: Number
+}, { collection: 'patients' });  // 👈 明確指定 collection 名稱
 
-const Patient = mongoose.model("Patient", patientSchema);
+const Patient = mongoose.model('Patient', patientSchema);
 
-// ✅ GET /api/patients — 支援全部查詢 / 依醫師查詢（query: ?doctorID=D001）
+/**
+ * ✅ GET /api/patients
+ * 回傳所有病患資料
+ */
 router.get("/", async (req, res) => {
   try {
-    const doctorID = req.query.doctorID;
-    const query = doctorID ? { attending_doctor_id: doctorID } : {};
-    const patients = await Patient.find(query);
+    const patients = await Patient.find({});
+    console.log("📦 撈到病患筆數：", patients.length);
     res.json(patients);
   } catch (err) {
-    console.error("❌ 查詢病患錯誤：", err);
-    res.status(500).json({ message: "伺服器錯誤" });
+    console.error("❌ 無法取得病患資料：", err);
+    res.status(500).json({ error: "Server Error" });
   }
 });
 
