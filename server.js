@@ -3,18 +3,24 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt'); // ✅ 用於密碼比對
 const cors = require('cors');
-const corsOptions = {
-  origin: 'https://icu-frontend.vercel.app',  // ✅ 改成你的前端網址
-  credentials: true,
-};
 const patientsRoute = require('./routes/patients');
+
 const app = express();
 const uri = process.env.MONGODB_URI;
 
+const corsOptions = {
+  origin: 'https://icu-frontend.vercel.app',  // ✅ 改成你的前端網址
+  methods: ['GET', 'POST'],
+  credentials: true,
+};
 
-app.use('/api/patients', patientsRoute);
 app.use(cors(corsOptions));
 app.use(express.json());
+/**
+ * 📦 病患相關 API
+ */
+app.use('/api/patients', patientsRoute);
+
 
 console.log("🔍 Using MongoDB URI:", process.env.MONGODB_URI);  //列印目前連線字串前幾碼（Debug 用）
 
@@ -118,10 +124,6 @@ app.get('/add-user-d004', async (req, res) => {
   }
 });
 
-/**
- * 📦 病患相關 API
- */
-app.use('/api/patients', patientsRoute);
 
 /**
  * ✅ 測試 MongoDB 是否能查詢 User 集合
