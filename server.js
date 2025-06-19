@@ -148,6 +148,24 @@ app.get("/test-mongo", async (req, res) => {
   }
 });
 
+// ✅ 修復 sharon 的角色欄位為 admin
+app.get('/fix-sharon-role', async (req, res) => {
+  try {
+    const sharon = await User.findOne({ username: 'sharon' });
+    if (!sharon) {
+      return res.send("❌ 找不到使用者 sharon");
+    }
+
+    sharon.role = 'admin';
+    await sharon.save();
+
+    res.send("✅ 已補上 sharon 的角色欄位為 admin");
+  } catch (err) {
+    console.error("🚨 修復失敗:", err);
+    res.status(500).send("❌ 修復失敗：" + err.message);
+  }
+});
+
 
 /**
  * 🔍 根路由檢查 API
