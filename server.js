@@ -44,7 +44,8 @@ mongoose.connect(process.env.MONGODB_URI, {
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   name: String,
-  password_hash: { type: String, required: true } // 雜湊後密碼
+  password_hash: { type: String, required: true }, // 雜湊後密碼
+  role: { type: String, enum: ['admin', 'doctor'], required: true } // ✅ 新增角色欄位
 });
 const User = mongoose.model('User', userSchema);
 
@@ -101,7 +102,7 @@ app.get('/add-test-users', async (req, res) => {
       }
 
       const password_hash = await bcrypt.hash(password, 10);
-      await User.create({ username, password_hash, name });
+      await User.create({ username, password_hash, name, role });
       results.push(`✅ 建立使用者 ${username} 成功`);
     }
 
