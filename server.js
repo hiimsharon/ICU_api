@@ -64,6 +64,24 @@ const valid = await bcrypt.compare(password, user.password_hash);
 });
 
 /**
+ * ✅ 新增測試用帳號 D004（密碼：sharonD004）
+ */
+app.get('/add-user-d004', async (req, res) => {
+  try {
+    const existing = await User.findOne({ username: 'D004' });
+    if (existing) {
+      return res.send('⚠️ 使用者 D004 已存在，無須重複建立');
+    }
+
+    const hash = await bcrypt.hash('sharonD004', 10);
+    await User.create({ username: 'D004', password_hash: hash });
+    res.send('✅ 使用者 D004 已建立（密碼為 sharonD004）');
+  } catch (err) {
+    res.status(500).send('❌ 建立失敗：' + err.message);
+  }
+});
+
+/**
  * 📦 病患相關 API
  */
 app.use('/api/patients', patientsRoute);
