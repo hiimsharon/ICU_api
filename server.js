@@ -97,7 +97,7 @@ app.get('/add-test-users', async (req, res) => {
 
     const results = [];
 
-    for (const { username, password, name } of testUsers) {
+    for (const { username, password, name, role } of testUsers) {
       const exists = await User.findOne({ username });
       if (exists) {
         results.push(`⚠️ 使用者 ${username} 已存在`);
