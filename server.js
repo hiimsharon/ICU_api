@@ -10,13 +10,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-console.log("🔍 Using MongoDB URI:", process.env.MONGODB_URI);
+console.log("🔍 Using MongoDB URI:", process.env.MONGODB_URI?.slice(0, 40));  //列印目前連線字串前幾碼（Debug 用）
 
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  serverSelectionTimeoutMS: 30000,
-  socketTimeoutMS: 45000,
+  serverSelectionTimeoutMS: 30000, // 最多等待 30 秒
+  socketTimeoutMS: 45000,          // Socket 最多等待 45 秒
 })
   .then(() => console.log('✅ MongoDB connected'))
   .catch(err => console.error('❌ MongoDB connection error:', err));
@@ -67,6 +67,19 @@ const valid = await bcrypt.compare(password, user.password_hash);
  * 📦 病患相關 API
  */
 app.use('/api/patients', patientsRoute);
+
+/**
+ * ✅ 測試 MongoDB 是否能查詢 User 集合
+ */
+app.get("/test-mongo", async (req, res) => {
+  try {
+    const count = await User.countDocuments();
+    res.send(`✅ MongoDB connected. Total users: ${count}`);
+  } catch (e) {
+    res.status(500).send("❌ MongoDB error: " + e.message);
+  }
+});
+
 
 /**
  * 🔍 根路由檢查 API
